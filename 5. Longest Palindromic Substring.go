@@ -1,30 +1,27 @@
+
 func longestPalindrome(s string) string {
-    if len(s) < 2 {
-        return s
-    }
-	lens := len(s)
-
+	if len(s) < 2 {
+		return s
+	}
 	lp := s[:1]
-    lenlp := 1
+	for i := 0; i < len(s); i++ {
+		left1, right1 := expandFromCenter(s, i, i)
+		if right1+1-left1 > len(lp) {
+			lp = s[left1 : right1+1]
+		}
 
-	for i := 0; i < lens; i++ {
-		for j := lens - 1; j >= i && (j+1-i) > lenlp; j-- {
-			if s[i] == s[j] && isPal(s, i+1, j-1) {
-				lp = s[i : j+1]
-                lenlp = j+1-i
-			}
+		left2, right2 := expandFromCenter(s, i, i+1)
+		if right2+1-left2 > len(lp) {
+			lp = s[left2 : right2+1]
 		}
 	}
 	return lp
 }
 
-func isPal(s string, i, j int) bool {
-	for i < j {
-		if s[i] != s[j] {
-			return false
-		}
-        i++;
-        j--;
+func expandFromCenter(s string, left, right int) (int, int) {
+	for left >= 0 && right < len(s) && s[left] == s[right] {
+		left--
+		right++
 	}
-	return true
+	return left + 1, right - 1
 }
